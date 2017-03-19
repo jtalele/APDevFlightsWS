@@ -9,4 +9,5 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
     <context:property-placeholder location="flights-${env}.properties"/>
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="UnitedHTTPRequest" host="${united.hots}" port="${united.port}" doc:name="HTTP Request Configuration"/>
 </mule>
