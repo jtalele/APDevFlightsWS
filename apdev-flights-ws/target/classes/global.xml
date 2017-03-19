@@ -10,4 +10,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     <context:property-placeholder location="flights-${env}.properties"/>
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
     <http:request-config name="UnitedHTTPRequest" host="${united.hots}" port="${united.port}" doc:name="HTTP Request Configuration"/>
+    <http:request-config name="AmericanHTTPRequest" host="${american.host}" port="${american.port}" basePath="/api" doc:name="HTTP Request Configuration">
+        <http:raml-api-configuration location="https://anypoint.mulesoft.com/apiplatform/repository/v2/organizations/de04ef77-44f1-49e2-959a-ff8863a91afb/public/apis/11687741/versions/160873/files/root"/>
+    </http:request-config>
 </mule>
