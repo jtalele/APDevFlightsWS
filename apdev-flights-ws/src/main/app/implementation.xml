@@ -169,4 +169,34 @@ data:
         </dw:transform-message>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
+    <flow name="postMultipleFlightsFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/multipleflights" allowedMethods="POST" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="486bd2d3-08a6-4f63-bc3a-8b32342534c9">
+            <dw:input-payload doc:sample="/Users/Saisha/Documents/MuleTranining/APDevFundamentals3.8_studentFiles_16aug2016/schemas-and-examples/flights-example.xml" mimeType="application/xml"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%namespace ns0 http://soap.training.mulesoft.com/
+%type currency = :string {format :"###.00"}
+%type flights = :object {class: "com.mulesoft.training.Flight"}
+
+---
+flights: payload.ns0#listAllFlightsResponse.*return map {
+	destination: $.destination,
+	price: $.price as :number ,
+	planeType: upper $.planeType replace /(BOING)/ with "BOIENG",
+	departureDate: $.departureDate as :date {format: "yyyy/MM/dd"} as :string {format: "MMM, dd, yyyy"},
+	availableSeats: $.emptySeats as :number,
+	//totalSeats: getNumSeats($.planeType)
+	totalSeats: lookup("getTotalSeatsFlow", {type: $.planeType})
+} ]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getTotalSeatsFlow">
+        <expression-component doc:name="Expression"><![CDATA[if (type.contains ("737")){
+       		payload = 150;
+       		} else {
+       		payload = 300;
+       		}]]></expression-component>
+    </flow>
 </mule>
